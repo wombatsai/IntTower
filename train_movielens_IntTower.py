@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
 import torch
-import torchvision
 import random
-
 from torch.utils.tensorboard import SummaryWriter
 from sklearn.metrics import log_loss, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
@@ -13,15 +11,13 @@ from preprocessing.inputs import SparseFeat, DenseFeat, VarLenSparseFeat
 from model.IntTower import IntTower
 from deepctr_torch.callbacks import EarlyStopping, ModelCheckpoint
 
-
-
-
 def data_process(data_path):
     data = pd.read_csv(data_path)
     data = data.drop(data[data['rating'] == 3].index)
     data['rating'] = data['rating'].apply(lambda x: 1 if x > 3 else 0)
     data = data.sort_values(by='timestamp', ascending=True)
-    train,test = train_test_split(data,test_size= 0.2 )
+    train, test = train_test_split(data,test_size= 0.2)
+
     return train, test, data
 
 
@@ -97,7 +93,6 @@ if __name__ == "__main__":
     dropout = 0.3
 
     setup_seed(seed)
-    print("1")
 
     data_path = './data/movielens.txt'
 
@@ -108,7 +103,6 @@ if __name__ == "__main__":
 
     test = get_user_feature(test)
     test = get_item_feature(test)
-
 
     sparse_features = ['user_id', 'movie_id', 'gender', 'age', 'occupation']
     dense_features = ['user_mean_rating', 'item_mean_rating']
@@ -130,15 +124,15 @@ if __name__ == "__main__":
     train[dense_features] = mms.transform(train[dense_features])
     test[dense_features] = mms.transform(test[dense_features])
 
-
-
     # 2.preprocess the sequence feature
     genres_key2index, train_genres_list, genres_maxlen = get_var_feature(train, 'genres')
+
     user_key2index, train_user_hist, user_maxlen = get_var_feature(train, 'user_hist')
 
     user_feature_columns = [SparseFeat(feat, data[feat].nunique(), embedding_dim=embedding_dim)
                             for i, feat in enumerate(user_sparse_features)] + [DenseFeat(feat, 1, ) for feat in
                                                                                user_dense_features]
+
     item_feature_columns = [SparseFeat(feat, data[feat].nunique(), embedding_dim=embedding_dim)
                             for i, feat in enumerate(item_sparse_features)] + [DenseFeat(feat, 1, ) for feat in
                                                                                item_dense_features]
@@ -166,7 +160,7 @@ if __name__ == "__main__":
         print('cuda ready...')
         device = 'cuda:4'
 
-    # print(train_model_input)
+    print("start training")
 
     es = EarlyStopping(monitor='val_auc', min_delta=0, verbose=1,
                        patience=5, mode='max', baseline=None)
@@ -179,8 +173,6 @@ if __name__ == "__main__":
     model.compile("adam", "binary_crossentropy", metrics=['auc', 'accuracy', 'logloss']
                   , lr=lr)
 
-
-
     model.fit(train_model_input, train[target].values, batch_size= batch_size, epochs=epoch, verbose=2, validation_split=0.2,
               callbacks=[es, mdckpt])
 
@@ -189,8 +181,15 @@ if __name__ == "__main__":
     model.eval()
 
 
+    model = IntTower(user_feature_columns, item_feature_columns, field_dim= 64, task='binary', dnn_dropout=dropout,
+                     device=device, user_head=32,item_head=32,user_filed_size=4,item_filed_size=2)
 
+    model.compile("adam", "binary_crossentropy", metrics=['auc', 'accuracy', 'logloss']
+                  , lr=lr)
 
+    model.load_state_dict(torch.load('movie_Intower.ckpt'))
+
+    model.eval()
 
     test_genres_list = get_test_var_feature(test, 'genres', genres_key2index, genres_maxlen)
 
@@ -203,6 +202,8 @@ if __name__ == "__main__":
 
     # %%
     # 6.Evaluate
+
+    print("start evaluation")
     eval_tr = model.evaluate(train_model_input, train[target].values)
     print(eval_tr)
 
