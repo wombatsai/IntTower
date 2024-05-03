@@ -1,6 +1,3 @@
-"""
-
-"""
 
 from model.base_tower import BaseTower
 from preprocessing.inputs import combined_dnn_input, compute_input_dim
@@ -75,11 +72,9 @@ class IntTower(BaseTower):
             self.user_fe_rep = self.user_fe_dnn(user_dnn_input)
             self.user_dnn_embedding = self.user_fe_rep[-1]
 
-
         if len(self.item_dnn_feature_columns) > 0:
             item_sparse_embedding_list, item_dense_value_list = \
                 self.input_from_feature_columns(inputs, self.item_dnn_feature_columns, self.item_embedding_dict)
-
 
             item_sparse_embedding = torch.cat(item_sparse_embedding_list, dim=1)
             Item_sim_embedding = self.Item_sim_non_local(item_sparse_embedding)
@@ -88,10 +83,8 @@ class IntTower(BaseTower):
 
             item_dnn_input = torch.cat([sparse_dnn_input, dense_dnn_input], axis=-1)
 
-
             self.item_fe_rep = self.item_fe_dnn(item_dnn_input)
             self.item_dnn_embedding = self.item_fe_rep[-1]
-
 
         if len(self.user_dnn_feature_columns) > 0 and len(self.item_dnn_feature_columns) > 0:
 
