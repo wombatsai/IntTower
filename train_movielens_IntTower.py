@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
     setup_seed(seed)
 
-    data_path = './data/movielens.txt'
+    data_path = './files/data/movielens.txt'
 
     train,test,data = data_process(data_path)
 
@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
     es = EarlyStopping(monitor='val_auc', min_delta=0, verbose=1,
                        patience=5, mode='max', baseline=None)
-    mdckpt = ModelCheckpoint(filepath='output_models/movie_Intower.ckpt', monitor='val_auc',
+    mdckpt = ModelCheckpoint(filepath='files/output_models/movie_Intower.ckpt', monitor='val_auc',
                              mode='max', verbose=1, save_best_only=True, save_weights_only=True)
 
     model = IntTower(user_feature_columns, item_feature_columns, field_dim= 64, task='binary', dnn_dropout=dropout,
@@ -176,7 +176,7 @@ if __name__ == "__main__":
     model.fit(train_model_input, train[target].values, batch_size= batch_size, epochs=epoch, verbose=2, validation_split=0.2,
               callbacks=[es, mdckpt])
 
-    model.load_state_dict(torch.load('output_models/movie_Intower.ckpt'))
+    model.load_state_dict(torch.load('files/output_models/movie_Intower.ckpt'))
 
     model.eval()
 

@@ -10,7 +10,7 @@ pip install -r requirements.txt
 python train_movielens_IntTower.py 
 ```
 ## Source code of Paper "IntTower: the Next Generation of  Two-Tower Model for Pre-ranking System" 
-![avatar](./figure/model.PNG)
+![avatar](./files/figure/model.PNG)
 # Contents
 - [Contents](#contents)
 - [IntTower Description](#IntTower-description)
@@ -144,7 +144,7 @@ Pre-Ranking System](https://arxiv.org/abs/2210.09890)
   
   
  # [Performance](#contents)
- ![avatar](./figure/performance.PNG)
+ ![avatar](./files/figure/performance.PNG)
 
 ## cite our work
 ```

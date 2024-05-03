@@ -33,15 +33,9 @@ venv/
 # Ipython notebook
 *.ipynb_checkpoints
 
-# Data files
-data/*
-figure/*
+# Data, log, and model checkpoint files
+files/*
 
 # Weights and Bias logs
 wandb/*
 
-# Log files
-log/*
-
-# Output files
-output_models/*
