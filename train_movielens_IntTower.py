@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import torch
 import random
-from torch.utils.tensorboard import SummaryWriter
 from sklearn.metrics import log_loss, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -10,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from preprocessing.inputs import SparseFeat, DenseFeat, VarLenSparseFeat
 from model.IntTower import IntTower
 from deepctr_torch.callbacks import EarlyStopping, ModelCheckpoint
+
 
 def data_process(data_path):
     data = pd.read_csv(data_path)
@@ -74,6 +74,7 @@ def get_test_var_feature(data, col, key2index, max_len):
     test_hist = pad_sequences(test_hist, maxlen=max_len, padding='post')
     return test_hist
 
+
 def setup_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
@@ -81,9 +82,8 @@ def setup_seed(seed):
     random.seed(seed)
     torch.backends.cudnn.deterministic = True
 
-if __name__ == "__main__":
-    # %%
 
+if __name__ == "__main__":
     embedding_dim = 32
 
     epoch = 10
@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
     es = EarlyStopping(monitor='val_auc', min_delta=0, verbose=1,
                        patience=5, mode='max', baseline=None)
-    mdckpt = ModelCheckpoint(filepath='movie_Intower.ckpt', monitor='val_auc',
+    mdckpt = ModelCheckpoint(filepath='output_models/movie_Intower.ckpt', monitor='val_auc',
                              mode='max', verbose=1, save_best_only=True, save_weights_only=True)
 
     model = IntTower(user_feature_columns, item_feature_columns, field_dim= 64, task='binary', dnn_dropout=dropout,
@@ -176,7 +176,7 @@ if __name__ == "__main__":
     model.fit(train_model_input, train[target].values, batch_size= batch_size, epochs=epoch, verbose=2, validation_split=0.2,
               callbacks=[es, mdckpt])
 
-    model.load_state_dict(torch.load('movie_Intower.ckpt'))
+    model.load_state_dict(torch.load('output_models/movie_Intower.ckpt'))
 
     model.eval()
 
@@ -187,7 +187,7 @@ if __name__ == "__main__":
     model.compile("adam", "binary_crossentropy", metrics=['auc', 'accuracy', 'logloss']
                   , lr=lr)
 
-    model.load_state_dict(torch.load('movie_Intower.ckpt'))
+    model.load_state_dict(torch.load('output_models/movie_Intower.ckpt'))
 
     model.eval()
 

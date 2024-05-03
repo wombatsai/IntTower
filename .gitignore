@@ -41,3 +41,6 @@ wandb/*
 
 # Log files
 log/*
+
+# Output files
+output_models/*
