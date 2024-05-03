@@ -1,25 +1,15 @@
 import numpy as np
 import pandas as pd
 import torch
-import torchvision
 import random
-import time
-from torch.utils.tensorboard import SummaryWriter
 from sklearn.metrics import log_loss, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 from preprocessing.inputs import SparseFeat, DenseFeat, VarLenSparseFeat
-from model.dssm import DSSM
-from model.wdm import WideDeep
-from model.dssm import DSSM
-from model.col_dssm import Col_DSSM
-from model.autoint import AutoInt
-from model.autoint import AutoInt
-from model.dcn import DCN
 from model.IntTower import IntTower
 from deepctr_torch.callbacks import EarlyStopping, ModelCheckpoint
-from utils import create_amazon_electronic_dataset
+
 
 def optimiz_memory(raw_data):
     optimized_g2 = raw_data.copy()
@@ -177,7 +167,6 @@ if __name__ == "__main__":
     # user_sparse_features, user_dense_features = ['reviewerID'], ['user_mean_rating']
     # item_sparse_features, item_dense_features = ['asin', 'categories'], ['item_mean_rating','price']
 
-
     # 1.Label Encoding for sparse features,and process sequence features
     for feat in sparse_features:
         lbe = LabelEncoder()
@@ -189,8 +178,6 @@ if __name__ == "__main__":
 
     train, test = train_test_split(data, test_size=0.2)
 
-
-
     # 2.preprocess the sequence feature
     # genres_key2index, train_genres_list, genres_maxlen = get_var_feature(train, 'genres')
     user_key2index, train_user_hist, user_maxlen = get_var_feature(train, 'user_hist')
@@ -201,9 +188,6 @@ if __name__ == "__main__":
     item_feature_columns = [SparseFeat(feat, data[feat].nunique(), embedding_dim=embedding_dim)
                             for i, feat in enumerate(item_sparse_features)] + [DenseFeat(feat, 1, ) for feat in
                                                                                item_dense_features]
-
-
-
 
     train_model_input = {name: train[name] for name in sparse_features + dense_features}
 
@@ -234,10 +218,6 @@ if __name__ == "__main__":
     model.eval()
 
     test_model_input = {name: test[name] for name in sparse_features + dense_features}
-
-
-
-
 
 
     pred_ts = model.predict(test_model_input, batch_size=500)
