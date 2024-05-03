@@ -1,9 +1,0 @@
-deepctr_torch==0.2.7
-keras==2.8.0
-numpy==1.21.4
-pandas==1.4.2
-scikit_learn==1.1.1
-tensorflow==2.8.0
-torch==1.11.0
-tqdm==4.57.0
-protobuf==3.20.*

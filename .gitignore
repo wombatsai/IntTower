@@ -19,6 +19,7 @@ pip-delete-this-directory.txt
 # Virtual environment
 venv/
 .env/
+test_venv/
 
 # IDE specific files
 .idea/
