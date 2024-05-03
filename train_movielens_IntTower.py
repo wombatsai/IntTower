@@ -180,23 +180,8 @@ if __name__ == "__main__":
 
     model.eval()
 
-
-    model = IntTower(user_feature_columns, item_feature_columns, field_dim= 64, task='binary', dnn_dropout=dropout,
-                     device=device, user_head=32,item_head=32,user_filed_size=4,item_filed_size=2)
-
-    model.compile("adam", "binary_crossentropy", metrics=['auc', 'accuracy', 'logloss']
-                  , lr=lr)
-
-    model.load_state_dict(torch.load('output_models/movie_Intower.ckpt'))
-
-    model.eval()
-
     test_genres_list = get_test_var_feature(test, 'genres', genres_key2index, genres_maxlen)
-
-
     test_model_input = {name: test[name] for name in sparse_features + dense_features}
-
-
     test_model_input["genres"] = test_genres_list
 
 

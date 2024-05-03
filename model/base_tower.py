@@ -9,8 +9,6 @@ import torch.utils.data as Data
 from sklearn.metrics import *
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-
-
 from preprocessing.inputs import SparseFeat, DenseFeat, VarLenSparseFeat, create_embedding_matrix, \
     get_varlen_pooling_list, build_input_features
 from layers.core import PredictionLayer
@@ -56,9 +54,6 @@ class BaseTower(nn.Module):
         self.stop_training = False  # used for EarlyStopping
         self.history = History()
         self.writer = SummaryWriter('./log')
-
-
-
 
     def fit(self, x=None, y=None, batch_size=None, epochs=1, verbose=1, initial_epoch=0, validation_split=0.,
             validation_data=None, shuffle=True, callbacks=None):
@@ -367,9 +362,6 @@ class BaseTower(nn.Module):
 
     def add_auxiliary_loss(self, aux_loss, alpha):
         self.aux_loss = aux_loss * alpha
-
-
-
 
     def compile(self, optimizer, loss=None, metrics=None,lr = 0.01):
         self.metrics_names = ["loss"]

@@ -35,6 +35,7 @@ venv/
 
 # Data files
 data/*
+figure/*
 
 # Weights and Bias logs
 wandb/*
