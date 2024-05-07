@@ -17,6 +17,7 @@ from tensorflow.python.keras.callbacks import CallbackList
 from preprocessing.callbacks import History
 from preprocessing.utils import contrast_loss
 from torch.utils.tensorboard import SummaryWriter
+import gc
 
 
 class BaseTower(nn.Module):
@@ -57,6 +58,8 @@ class BaseTower(nn.Module):
 
     def fit(self, x=None, y=None, batch_size=None, epochs=1, verbose=1, initial_epoch=0, validation_split=0.,
             validation_data=None, shuffle=True, callbacks=None):
+
+
         if isinstance(x, dict):
             x = [x[feature] for feature in self.feature_index]
 
@@ -219,6 +222,10 @@ class BaseTower(nn.Module):
                 break
         self.writer.close()
         callbacks.on_train_end()
+
+        torch.cuda.empty_cache()
+        gc.collect()
+
         return self.history
 
     def evaluate(self, x, y, batch_size=256):
