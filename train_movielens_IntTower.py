@@ -158,7 +158,7 @@ if __name__ == "__main__":
     use_cuda = True
     if use_cuda and torch.cuda.is_available():
         print('cuda ready...')
-        device = 'cuda:4'
+        device = 'cuda:0'
 
     print("start training")
 
