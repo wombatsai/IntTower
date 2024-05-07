@@ -88,7 +88,7 @@ def setup_seed(seed):
 if __name__ == "__main__":
 
 
-    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:2048"
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
 
     embedding_dim = 32
 
