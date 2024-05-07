@@ -87,7 +87,7 @@ if __name__ == "__main__":
     embedding_dim = 32
 
     epoch = 10
-    batch_size = 2048
+    batch_size = 256
     lr = 0.001
     seed = 1023
     dropout = 0.3
