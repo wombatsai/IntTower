@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import torch
 import random
-import gc
 from sklearn.metrics import log_loss, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -10,7 +9,6 @@ from sklearn.model_selection import train_test_split
 from preprocessing.inputs import SparseFeat, DenseFeat, VarLenSparseFeat
 from model.IntTower import IntTower
 from deepctr_torch.callbacks import EarlyStopping, ModelCheckpoint
-import os
 
 
 def data_process(data_path):
@@ -87,9 +85,6 @@ def setup_seed(seed):
 
 if __name__ == "__main__":
 
-
-    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
-
     embedding_dim = 32
 
     epoch = 10
@@ -164,12 +159,10 @@ if __name__ == "__main__":
     use_cuda = True
     if use_cuda and torch.cuda.is_available():
         print('cuda ready...')
-        device = 'cuda:1'
+        device = 'cuda:0'
 
     print("start training")
 
-    torch.cuda.empty_cache()
-    gc.collect()
 
     es = EarlyStopping(monitor='val_auc', min_delta=0, verbose=1,
                        patience=5, mode='max', baseline=None)

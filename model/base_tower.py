@@ -223,9 +223,6 @@ class BaseTower(nn.Module):
         self.writer.close()
         callbacks.on_train_end()
 
-        torch.cuda.empty_cache()
-        gc.collect()
-
         return self.history
 
     def evaluate(self, x, y, batch_size=256):
