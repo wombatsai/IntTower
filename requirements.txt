@@ -1,9 +1,9 @@
 deepctr_torch
-keras
-numpy
-pandas
-scikit_learn
-tensorflow
+keras==2.8.0
+numpy==1.21.4
+pandas==1.3.5
+scikit_learn==1.0.2
+tensorflow==2.8.0
 torch
-tqdm
+tqdm==4.51.0
 protobuf

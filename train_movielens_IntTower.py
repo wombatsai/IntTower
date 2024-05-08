@@ -156,11 +156,13 @@ if __name__ == "__main__":
     # %%
     # 4.Define Model,train,predict and evaluate
     device = 'cpu'
+    '''
+    
     use_cuda = True
     if use_cuda and torch.cuda.is_available():
         print('cuda ready...')
         device = 'cuda:0'
-
+    '''
     print("start training")
 
 
